@@ -102,25 +102,14 @@ Notice how due to unrestricted randomization, we had the replication of some tre
 # Setting seed to get same randomization result every time
 set.seed(930)
 
-rcbd_rand <- crossing(trtname = trts$trtname,
-                      rep = 1:4
-                      ) %>% 
-  arrange(rep) %>% 
-  group_by(rep) %>% 
-  mutate(trtname = sample(trtname)) %>% 
-  mutate(plot = (rep*100) + 1:9) %>% 
-  ungroup()
+rcbd_rand 
 
 rcbd_rand
 ```
 
 Let's check if in fact each treatment appears once per block.  
 ```{r}
-rcbd_rand %>% 
-  group_by(rep, trtname) %>% 
-  tally() %>% 
-  filter(n > 1)
-
+rcbd_rand 
 ```
 
 ## Plot layout  
@@ -162,14 +151,12 @@ If this is in fact your study, you may want to export both the field randomizati
 Let's do that below for the RCBD example.  
 
 ```{r}
-rcbd_rand %>% 
+rcbd_rand 
   # Retrieving other information contained in trts
-  left_join(trts, by = "trtname") %>% 
+
   # Rearranging columns  
-  dplyr::select(plot, rep, trtname, trtnum, 
-                nrate_kgha, krate_kgha
-                ) %>% 
-  write_csv("../output/rcbd_randomization_table.csv")
+
+
 ```
 
 `ggsave()` will save the last plot created in the session, even if from an above chunk. Since the last plot we created was the RCBD layout, we can just go ahead and call ggsave here.  
